@@ -14,7 +14,6 @@ import { VueDraggable } from 'vue-draggable-plus'
 
 
 
-
 const tableStore = useTableStore();
 const configStore = useConfigStore();
 
@@ -41,6 +40,8 @@ const currentLevelScore = computed(() => {
 
 // 状态有 就绪,开胡,结算
 const tableState = ref("就绪");
+
+const prizePool = ref(Prize.getPrizePool())
 // 重载
 function reload() {
   tableState.value = "就绪"
@@ -49,8 +50,11 @@ function reload() {
   // 设为第一关
   currentLevel.value = 1;
   currentPair.value = -1;
+  // 奖品池清空
+  currentPrizes.value = [];
   // 设置奖品状态
-  Prize.pool.forEach(i => {
+  prizePool.value = Prize.getPrizePool()
+  prizePool.value.forEach(i => {
     if (i.gameReset) {
       i.gameReset()
     }
@@ -274,13 +278,12 @@ const currentLevelPrizeSelectedPool = ref([]);
 function selectPrize() {
   // 确定三个奖品
   for (let i = 0; i < 3; i++) {
-    // Prize.pool
-    let length = Prize.pool.length;
+    let length = prizePool.value.length;
     // 从0到 length-1 随机取一个
     const index = Math.floor(Math.random() * length);
     // 删除避免重复选择
-    currentLevelPrizeSelectedPool.value.push(Prize.pool[index])
-    Prize.pool.splice(index, 1)
+    currentLevelPrizeSelectedPool.value.push(prizePool.value[index])
+    prizePool.value.splice(index, 1)
   }
   prizeSelectModalShow.value = true
 }
@@ -329,7 +332,7 @@ onMounted(() => {
     <div class="outer-left">
       <div class="base-handle">
         <button class="handle-btn" @click="reload">重来</button>
-        <!-- <button class="handle-btn" @click="test">测试</button> -->
+        <button class="handle-btn" @click="test">测试</button>
       </div>
       <fieldset class="info">
         <legend>当前 第{{ currentLevel }}关</legend>

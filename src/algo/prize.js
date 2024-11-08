@@ -876,8 +876,8 @@ const 子镜 = {
     }
 }
 
-export default {
-    pool: [老虎,
+function getPrizePool() {
+    return new Array(老虎,
         筷子,
         土豆,
         烙饼,
@@ -910,5 +910,9 @@ export default {
         花瓶,
         螺丝,
         镜子,
-        子镜],
+        子镜);
+}
+
+export default {
+    getPrizePool
 }
